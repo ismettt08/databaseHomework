@@ -1,37 +1,6 @@
 {% extends "layout.html" %}
 {% block title %}Patient Details{% endblock %}
 {% block content %}
-{% if userRole == 1 %}
-<nav>
-  <div class="nav-wrapper blue lighten-3 ">
-    <div class="container">
-      <ul id="nav-mobile" class="left">
-        <li><a href="{{url_for('sell_page')}}">Sell</a></li>
-        <li><a href="3.html">Reports</a></li>
-      </ul>
-      <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Root)</a>
-      <ul id="nav-mobile" class="right">
-        <li><a href="{{url_for('employee_page')}}">Employee</a></li>
-        <li><a href="{{url_for('logout_page')}}">Logout</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
-{% elif userRole == 0 %}
-<nav>
-    <div class="nav-wrapper blue lighten-3 ">
-        <div class="container">
-          <ul id="nav-mobile" class="left">
-            <li><a href="{{url_for('sell_page')}}">Sell</a></li>
-          </ul>
-          <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Employee)</a>
-          <ul id="nav-mobile" class="right">
-            <li><a href="{{url_for('logout_page')}}">Logout</a></li>
-          </ul>
-        </div>
-    </div>
-</nav>
-{% endif %}
 
 <table class="highlight centered">
     <thead>

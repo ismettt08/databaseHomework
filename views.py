@@ -34,23 +34,10 @@ def home_page():
 
 def employee_page():
     role = getUserRole()
-
-    cursor = connection.cursor()
-    kurabiye = request.cookies.get("session_id")
-    if kurabiye is not None:
-        cursor.execute("SELECT user_role FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
-        curUserRole = cursor.fetchall()
-
-        if(role == -1):
-            print("Please fIrst Login")
-            return redirect('/')
-
-        if role == 1:
-            return redirect("/")
-    return render_template("employee.html")
-    
-    
-    #return redirect('/employee')
+    if(role != 1):
+        print("You don't have the permission!")
+        return redirect('/')
+    return render_template("employee.html", userRole = role)
 
 #methods = ['POST']
 def login_api():
@@ -82,9 +69,6 @@ def login_api():
     connection.commit() #Database değiştirmek için
     return resp #temp
 
-
-
-
 #methods = ['POST']
 def register_api():
     cursor = connection.cursor()
@@ -104,25 +88,26 @@ def register_api():
     
     cursor.execute("INSERT INTO users (user_name, user_role, password) VALUES ('{a}', false, '{b}')".format(a=name, b=hashed.hexdigest()))
     connection.commit() #Database değiştirmek için
-            #TODO başarılı oldu yazısı dön
+    #TODO başarılı oldu yazısı dön
     return redirect('/employee')
 
 def logout_page():
     cursor = connection.cursor()
     kurabiye = request.cookies.get("session_id")
     if kurabiye is not None:
-        cursor.execute("SELECT session_id FROM sessions WHERE session_id = {}".format(kurabiye))
+        cursor.execute("SELECT session_id FROM sessions WHERE session_id = '{}'".format(kurabiye))
         cursor.fetchall() #Clear cursor
         if(cursor.rowcount != 0):        
-            cursor.execute("DELETE FROM sessions WHERE session_id = {0}".format((kurabiye)))
+            cursor.execute("DELETE FROM sessions WHERE session_id = '{0}'".format((kurabiye)))
             connection.commit()
     return redirect('/')
 
-
-
 def sell_page():
+    curUserRole = getUserRole()
+    if curUserRole == -1:
+        return redirect("/")
+
     cursor = connection.cursor()
-    kurabiye = request.cookies.get("session_id")
 
     cursor.execute("SELECT to_json(patient_name) FROM patients")
     allPatinets = cursor.fetchall()
@@ -140,18 +125,10 @@ def sell_page():
     patientsSurname = patientsSurname + "}"
     print(patientsSurname)
 
-    if kurabiye is not None:
-        curUserRole = getUserRole()
-        if(cursor.rowcount == 0):
-            return redirect("/")
-
-        basketID = getBasketID()
-        cursor.execute("SELECT med_name, price, med_detail, quantity, basket_entry_id FROM medicines INNER JOIN basket_entries ON basket_entries.medicine_id = medicines.medicine_id WHERE basket_entries.basket_id = {} order by basket_entry_id".format(basketID))
-        medAttributes = cursor.fetchall()
-
-        return render_template("sell.html", userRole = curUserRole[0][0], medList = medAttributes, patientsNameJSON = patientsName, patientsSurnameJSON = patientsSurname)
-    #TODO yok ise anasayfaya yönlendir
-    return redirect("/")
+    basketID = getBasketID()
+    cursor.execute("SELECT med_name, price, med_detail, quantity, basket_entry_id FROM medicines INNER JOIN basket_entries ON basket_entries.medicine_id = medicines.medicine_id WHERE basket_entries.basket_id = {} order by basket_entry_id".format(basketID))
+    medAttributes = cursor.fetchall()
+    return render_template("sell.html", userRole = curUserRole, medList = medAttributes, patientsNameJSON = patientsName, patientsSurnameJSON = patientsSurname)
 
 def update_medicine():
     basket_entry_id = request.args.get("basket_entry_id")
@@ -212,5 +189,7 @@ def getBasketID():
     return basketID[0][0]
 
 def patient_table():
-
-    return render_template("patient_table.html", userRole = curUserRole[0][0])
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    return render_template("patient_table.html", userRole = role)
