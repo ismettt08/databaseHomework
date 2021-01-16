@@ -192,4 +192,7 @@ def patient_table():
     role = getUserRole()
     if role == -1:
         return redirect("/")
-    return render_template("patient_table.html", userRole = role)
+    cursor = connection.cursor()
+    cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients")
+    patients = cursor.fetchall()
+    return render_template("patient_table.html", userRole = role, patientList = patients)

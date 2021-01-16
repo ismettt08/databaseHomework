@@ -17,7 +17,7 @@
   </head>
   <body>
 
-    {% if userRole == 1 %}
+{% if userRole == 1 %}
 <nav>
   <div class="nav-wrapper blue lighten-3 ">
     <div class="container">
@@ -29,6 +29,7 @@
       <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Root)</a>
       
       <ul id="nav-mobile" class="right">
+        <li><a href="{{url_for('patient_table')}}">Patients</a></li>
         <li><a href="{{url_for('employee_page')}}">Employee</a></li>
         <li><a href="{{url_for('logout_page')}}">Logout</a></li>
       </ul>
@@ -46,6 +47,7 @@
           <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Employee)</a>
           
           <ul id="nav-mobile" class="right">
+            <li><a href="{{url_for('patient_table')}}">Patients</a></li>
             <li><a href="{{url_for('logout_page')}}">Logout</a></li>
           </ul>
         </div>
@@ -59,10 +61,8 @@
     </div>
   </div>
 </nav>
-
-<div style="height: 200px;"></div>
 {% endif %}
-
+<div style="height: 50px;"></div>
 
 
 
