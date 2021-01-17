@@ -32,11 +32,31 @@
           </div>
         </div>
       </form>
-
     </div>
   </div>
 </div>
 {% endif %}
-
-
+  <div class="container left row">
+    <form id="theme_unq">
+      <p>
+        <label>
+          <input name="thecolor" type="radio" value="0" formaction="{{url_for('home_page')}}?thecolor=0"/>
+          <span>White</span>
+        </label>
+      </p>
+      <p>
+        <label>
+          <input name="thecolor" type="radio" value="1" formaction="{{url_for('home_page')}}?thecolor=1"/>
+          <span>Dark</span>
+        </label>
+      </p>
+      <p>
+      <label>
+        <input name="thecolor" type="radio" value="2" formaction="{{url_for('home_page')}}?thecolor=2"/>
+        <span>Blue</span>
+      </label>
+    </p>
+    <button class="waves-effect waves-light btn green lighten-2 centered" type="submit" name="submit"  value="update"><i class="material-icons">save</i></button>
+  </form>
+</div>
 {% endblock %}

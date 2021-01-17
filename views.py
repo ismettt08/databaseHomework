@@ -11,7 +11,6 @@ import json
 url = os.getenv("DATABASE_URL")
 connection = dbapi2.connect(url)
 
-
 def getRandomCookie():
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(60))
@@ -26,10 +25,27 @@ def getUserRole():
         if(cursor.rowcount != 0):
             return int(curUserRole[0][0])
     return -1
+def getTheme():
+    cursor = connection.cursor() 
+    kurabiye = request.cookies.get("session_id")
+    cursor.execute("SELECT theme FROM sessions WHERE session_id = '{}'".format(kurabiye))
+    theme =cursor.fetchall()
+    if(cursor.rowcount != 0):
+        return theme[0][0]
+    return 0
 
 def home_page():
     role = getUserRole()
-    resp = make_response(render_template("main.html", userRole = role))
+    cursor = connection.cursor() 
+    theme = request.args.get("thecolor") #white = 0, dark = 1, blue = 2
+    kurabiye = request.cookies.get("session_id")
+    if theme:
+        cursor.execute("UPDATE sessions SET theme = {a} WHERE session_id = '{b}'".format(a=theme, b=kurabiye))
+        resp = make_response(render_template("main.html", userRole = role, theme = int(theme)))
+    else:
+        resp = make_response(render_template("main.html", userRole = role, theme = getTheme()))
+    connection.commit()
+    
     return resp
 
 def employee_page():
@@ -37,7 +53,7 @@ def employee_page():
     if(role != 1):
         print("You don't have the permission!")
         return redirect('/')
-    return render_template("employee.html", userRole = role)
+    return render_template("employee.html", userRole = role, theme = getTheme())
 
 #methods = ['POST']
 def login_api():
@@ -86,7 +102,7 @@ def register_api():
         return redirect('/employee')
     print("password passwd is " + hashed.hexdigest())
     
-    cursor.execute("INSERT INTO users (user_name, user_role, password) VALUES ('{a}', false, '{b}')".format(a=name, b=hashed.hexdigest()))
+    cursor.execute("INSERT INTO users (user_name, user_role, password) VALUES ('{a}', 0, '{b}')".format(a=name, b=hashed.hexdigest()))
     connection.commit() #Database değiştirmek için
     #TODO başarılı oldu yazısı dön
     return redirect('/employee')
@@ -128,7 +144,7 @@ def sell_page():
     basketID = getBasketID()
     cursor.execute("SELECT med_name, price, med_detail, quantity, basket_entry_id FROM medicines INNER JOIN basket_entries ON basket_entries.medicine_id = medicines.medicine_id WHERE basket_entries.basket_id = {} order by basket_entry_id".format(basketID))
     medAttributes = cursor.fetchall()
-    return render_template("sell.html", userRole = curUserRole, medList = medAttributes, patientsNameJSON = patientsName, patientsSurnameJSON = patientsSurname)
+    return render_template("sell.html", userRole = curUserRole, medList = medAttributes, patientsNameJSON = patientsName, patientsSurnameJSON = patientsSurname, theme = getTheme())
 
 #methods = ['POST']
 def addmed_api():
@@ -184,7 +200,7 @@ def patient_table():
     cursor = connection.cursor()
     cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients")
     patients = cursor.fetchall()
-    return render_template("patient_table.html", userRole = role, patientList = patients)
+    return render_template("patient_table.html", userRole = role, patientList = patients, theme = getTheme())
 
 #methods = ['POST','GET']
 def update_medicine():
@@ -212,7 +228,7 @@ def patient():
     if (citizenshipNumber is None) or (cursor.rowcount == 0): #Empty patient card
         return render_template("patient.html", userRole = role)
     curPatient = cursor.fetchall()
-    return render_template("patient.html", userRole = role, citizenshipNumber = citizenshipNumber, patient = curPatient) #Full patient card
+    return render_template("patient.html", userRole = role, citizenshipNumber = citizenshipNumber, patient = curPatient, theme = getTheme()) #Full patient card
 
 #methods = ['POST','GET']
 def crud_patient():
