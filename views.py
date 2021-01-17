@@ -130,17 +130,6 @@ def sell_page():
     medAttributes = cursor.fetchall()
     return render_template("sell.html", userRole = curUserRole, medList = medAttributes, patientsNameJSON = patientsName, patientsSurnameJSON = patientsSurname)
 
-def update_medicine():
-    basket_entry_id = request.args.get("basket_entry_id")
-    amount =  request.args.get("amount")
-    cursor = connection.cursor()
-    if amount == "0":
-        cursor.execute(f"delete from basket_entries where basket_entry_id = {basket_entry_id}")
-    else:
-        cursor.execute(f"update basket_entries set quantity = quantity + {amount} where basket_entry_id = {basket_entry_id}")
-    connection.commit()
-    return redirect("/sell")
-
 #methods = ['POST']
 def addmed_api():
     cursor = connection.cursor()
@@ -196,3 +185,69 @@ def patient_table():
     cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients")
     patients = cursor.fetchall()
     return render_template("patient_table.html", userRole = role, patientList = patients)
+
+#methods = ['POST','GET']
+def update_medicine():
+    basket_entry_id = request.args.get("basket_entry_id")
+    amount =  request.args.get("amount")
+    cursor = connection.cursor()
+    if amount == "0":
+        cursor.execute(f"delete from basket_entries where basket_entry_id = {basket_entry_id}")
+    else: #TODO negatif şanslara girmesine izin verme
+        cursor.execute(f"update basket_entries set quantity = quantity + {amount} where basket_entry_id = {basket_entry_id}")
+    connection.commit()
+    return redirect("/sell")
+
+#methods = ['POST','GET']
+def patient():
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    cursor = connection.cursor()
+
+    citizenshipNumber = request.args.get("citizenshipNumber")
+    
+    print(citizenshipNumber)
+    cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients WHERE patient_id_number = '{}'".format(citizenshipNumber))
+    if (citizenshipNumber is None) or (cursor.rowcount == 0): #Empty patient card
+        return render_template("patient.html", userRole = role)
+    curPatient = cursor.fetchall()
+    return render_template("patient.html", userRole = role, citizenshipNumber = citizenshipNumber, patient = curPatient) #Full patient card
+
+#methods = ['POST','GET']
+def crud_patient():
+    
+    role = getUserRole()
+    if role == -1:
+        return redirect("/patient.html")
+    cursor = connection.cursor()
+
+    citizenship = request.form['citizenship']
+
+    cursor.execute("SELECT * FROM patients WHERE patient_id_number = '{}'".format(citizenship))
+    if request.form["submit"] == "update":
+        print("DEBUG2")
+        name = request.form['name']
+        surname = request.form['surname']
+        phone = request.form['phone']
+        if cursor.rowcount == 0: #Add new patient
+            cursor.fetchall() #Clear cursor
+            if phone:
+                cursor.execute("INSERT INTO patients (patient_name, patient_surname, patient_phone_number, patient_id_number) VALUES ('{a}', '{b}', '{c}', '{d}')".format(a=name, b=surname, c=phone, d=citizenship))
+            else:
+                cursor.execute("INSERT INTO patients (patient_name, patient_surname, patient_id_number) VALUES ('{a}', '{b}', '{c}')".format(a=name, b=surname, c=citizenship))
+            connection.commit()
+        else: #Update the patient
+            cursor.fetchall() #Clear cursor
+            if phone:
+                cursor.execute("UPDATE patients SET patient_name = '{a}', patient_surname = '{b}', patient_phone_number = '{c}' WHERE patient_id_number = '{d}'".format(a=name, b=surname, c=phone, d=citizenship))
+            else:
+                cursor.execute("UPDATE patients SET patient_name = '{a}', patient_surname = '{b}' WHERE patient_id_number = '{c}'".format(a=name, b=surname, c=citizenship))
+            connection.commit()
+
+    elif request.form["submit"] == "remove":
+        print("DEBUG")
+        if cursor.rowcount != 0: #Remove patient
+            cursor.execute("DELETE FROM patients WHERE patient_id_number = '{}'".format(citizenship))
+            connection.commit()
+    return redirect("/patient")

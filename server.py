@@ -17,6 +17,9 @@ def create_app():
     app.add_url_rule("/addmed_api", view_func=views.addmed_api, methods=['POST'])
     app.add_url_rule("/updateAmount", view_func=views.update_medicine, methods=['POST', 'GET'])
     app.add_url_rule("/patient_table", view_func=views.patient_table)
+    app.add_url_rule("/patient", view_func=views.patient, methods=['POST', 'GET'])
+    app.add_url_rule("/crud_patient", view_func=views.crud_patient, methods=['POST'])
+    
     return app
 
 if __name__ == "__main__":

@@ -1,10 +1,12 @@
 {% extends "layout.html" %}
 {% block title %}Patient Details{% endblock %}
 {% block content %}
+
 <div class="row">
-    <div class="col s8 offset-s2">
-        <a class="waves-effect waves-light btn green lighten-2"><i class="material-icons left">add</i>Add</a>
-        <a class="waves-effect waves-light btn red lighten-2 right"><i class="material-icons left">remove</i>Remove</a>
+    <div class="col s8 offset-s2 input-field">
+        <form action="{{url_for('patient')}}" id="addpat_unq">
+            <button class="waves-effect waves-light btn green lighten-2" type="submit"><i class="material-icons left">add</i>Add</button>
+        </form>
     </div>
     <div class="col s8 offset-s2 light-blue lighten-5">
         <table class="highlight centered">
@@ -28,7 +30,7 @@
                     <td>{{phone}}</td>
                     <td>{{citizenship}}</td>
                     <td>
-                        <a href="" class="secondary-content">
+                        <a href="{{url_for('patient')}}?citizenshipNumber={{citizenship}}" class="secondary-content">
                             <i class="material-icons prefix">edit</i>
                         </a>
                     </td>
@@ -38,5 +40,4 @@
         </table>
     </div>
 </div>
-
 {% endblock %}
