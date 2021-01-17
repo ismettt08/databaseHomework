@@ -18,23 +18,22 @@
           </div>
           <div class="input-field col s5 offset-s3">
             <i class="material-icons prefix ">assignment_ind</i>
-            <input type="text" name="thecustomer" id="customer_name" class="autocomplete">
-            <label for="customer_name">Customer Name</label>
-          </div>
-          <div class="input-field col s5 offset-s3">
-            <i class="material-icons prefix ">assignment_ind</i>
-            <input type="text" name="thecustomer" id="customer_surname" class="autocomplete">
-            <label for="customer_name">Customer Surname</label>
+            <input type="text" name="thecustomer" id="customer_citizenship" class="autocomplete">
+            <label for="customer_citizenship">Citizenship Number</label>
           </div>
           <div class="input-field col s2 ">
             <p>
                 <label>
-                  <input id="indeterminate-checkbox secondary-content" type="checkbox" />
+                  <input id="indeterminate-checkbox secondary-content" type="checkbox" name="isCredit"/>
                   <span>Credit Card</span>
                 </label>
             </p>
             <button class="btn waves-effect waves-light blue" type="submit" name="submit" value="send_basket">Send</button>
             <button class="btn waves-effect waves-light red" type="submit" name="submit" value="cancel_basket">Cancel</button>
+            <div class="input-field col s9">
+              <input disabled id="icon_prefix"  type="text">
+              <label for="icon_prefix">{{totalPrice}}₺</label>
+            </div>
           </div>
           <div>
               <ul class="collection col s5 offset-s3 z-depth-1">
@@ -71,11 +70,8 @@
 
 <script>
 $(document).ready(function(){
-    $('#customer_name').autocomplete({
-       data: {{patientsNameJSON|safe}},
-    });
-    $('#customer_surname').autocomplete({
-       data: {{patientsSurnameJSON|safe}},
+    $('#customer_citizenship').autocomplete({
+       data: {{citizenshipJSON|safe}},
     });
   });
 

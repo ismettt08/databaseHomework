@@ -1,4 +1,12 @@
 #DATABASE_URL=postgres://postgres:123456@taha:5432/eczanem python3 server.py 
+
+#Medicine List
+#Sales List
+#Session extra attributes
+#Delete Account
+#User extra attributes
+#Patints extra attributes
+#Reports
 from datetime import datetime
 from hashlib import sha256, md5
 import random
@@ -17,7 +25,7 @@ def getRandomCookie():
     return result_str
 
 def getUserRole():
-    cursor = connection.cursor() 
+    cursor = connection.cursor()
     kurabiye = request.cookies.get("session_id")
     if kurabiye is not None:
         cursor.execute("SELECT user_role FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
@@ -124,27 +132,22 @@ def sell_page():
         return redirect("/")
 
     cursor = connection.cursor()
-
-    cursor.execute("SELECT to_json(patient_name) FROM patients")
+    cursor.execute("SELECT to_json(patient_id_number) FROM patients")
     allPatinets = cursor.fetchall()
-    patientsName = "{"
+    patientsCitizenship = "{"
     for i in range(cursor.rowcount):
-        patientsName = patientsName + "\""+allPatinets[i][0] + "\"" + ": null,"
-    patientsName = patientsName + "}"
-    print(patientsName)
-
-    cursor.execute("SELECT to_json(patient_surname) FROM patients")
-    allPatinets = cursor.fetchall()
-    patientsSurname = "{"
-    for i in range(cursor.rowcount):
-        patientsSurname = patientsSurname + "\""+allPatinets[i][0] + "\"" + ": null,"
-    patientsSurname = patientsSurname + "}"
-    print(patientsSurname)
+        patientsCitizenship = patientsCitizenship + "\""+allPatinets[i][0] + "\"" + ": null,"
+    patientsCitizenship = patientsCitizenship + "}"
+    print(patientsCitizenship)
 
     basketID = getBasketID()
     cursor.execute("SELECT med_name, price, med_detail, quantity, basket_entry_id FROM medicines INNER JOIN basket_entries ON basket_entries.medicine_id = medicines.medicine_id WHERE basket_entries.basket_id = {} order by basket_entry_id".format(basketID))
     medAttributes = cursor.fetchall()
-    return render_template("sell.html", userRole = curUserRole, medList = medAttributes, patientsNameJSON = patientsName, patientsSurnameJSON = patientsSurname, theme = getTheme())
+    totalPrice = 0
+    for i in range(cursor.rowcount):
+        totalPrice = totalPrice + medAttributes[i][1] * medAttributes[i][3]
+
+    return render_template("sell.html", userRole = curUserRole, medList = medAttributes, citizenshipJSON = patientsCitizenship, theme = getTheme(), totalPrice = totalPrice)
 
 #methods = ['POST']
 def addmed_api():
@@ -168,6 +171,13 @@ def addmed_api():
                     cursor.execute("INSERT INTO basket_entries (medicine_id, quantity, basket_id) VALUES ({a}, 1, {b})".format(a=medID[0][0], b=basketID))
                 connection.commit()     
     elif  request.form["submit"] == "send_basket":
+        isCredit = 0
+        if "isCredit" in request.form.to_dict():
+            isCredit = 1
+        citizenshipNumber = request.form["thecustomer"]
+        if citizenshipNumber == "": #If citizenship number is empty return
+            return redirect("/sell")
+
         cursor.execute("SELECT medicine_id FROM basket_entries WHERE basket_id = {}".format(basketID))
         cursor.fetchall()
         if(cursor.rowcount != 0):
@@ -176,6 +186,29 @@ def addmed_api():
             if(cursor.rowcount != 0):
                 cursor.execute("UPDATE baskets SET basket_state = true WHERE basket_id = {}".format(basketID))
                 connection.commit()
+                cursor.execute("SELECT patient_id FROM patients WHERE patient_id_number = '{}'".format(citizenshipNumber))
+                patientID = cursor.fetchall()
+
+                kurabiye = request.cookies.get("session_id")
+                if kurabiye is not None:
+                    cursor.execute("SELECT users.user_id FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
+                    userID = cursor.fetchall()
+                    
+                    cursor.execute("SELECT price, quantity, basket_entries.medicine_id FROM medicines INNER JOIN basket_entries ON basket_entries.medicine_id = medicines.medicine_id WHERE basket_entries.basket_id = {} order by basket_entry_id".format(basketID))
+                    basketAttr = cursor.fetchall()
+                    #Stock -= sold quantity
+                    for i in range(cursor.rowcount):
+                        cursor.execute("UPDATE medicines SET stock_quantity = stock_quantity - {a} WHERE medicine_id = {b}".format(a=basketAttr[i][1], b=basketAttr[i][2]))
+                    ###
+                    ##TotalPrice Calculation
+                    totalPrice = 0
+                    for i in range(cursor.rowcount):
+                        totalPrice = totalPrice + basketAttr[i][0] * basketAttr[i][1]
+                    ###
+                    cursor.execute("SELECT payment_method_id FROM payment_methods WHERE payment_type = {}".format(isCredit))
+                    paymentType = cursor.fetchall()
+                    print("INSERT INTO SALESSSS")
+                    cursor.execute("INSERT INTO sales (basket_id, patient_id, payment_method_id, price, user_id) VALUES ({a}, {b}, {c}, {d}, {e})".format(a=basketID, b=patientID[0][0],c=paymentType[0][0],d=totalPrice,e=userID[0][0]))
     else:
         cursor.execute("DELETE FROM basket_entries WHERE basket_id = {}".format(basketID))
         connection.commit()
@@ -190,7 +223,6 @@ def getBasketID():
         connection.commit()
         cursor.execute("SELECT basket_id FROM baskets WHERE basket_state = false")
         basketID = cursor.fetchall()
-    print(basketID[0][0])
     return basketID[0][0]
 
 def patient_table():
@@ -198,7 +230,7 @@ def patient_table():
     if role == -1:
         return redirect("/")
     cursor = connection.cursor()
-    cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients")
+    cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients ORDER BY patient_id")
     patients = cursor.fetchall()
     return render_template("patient_table.html", userRole = role, patientList = patients, theme = getTheme())
 
@@ -267,3 +299,43 @@ def crud_patient():
             cursor.execute("DELETE FROM patients WHERE patient_id_number = '{}'".format(citizenship))
             connection.commit()
     return redirect("/patient")
+
+
+def med_table():
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM medicines")
+    meds = cursor.fetchall()
+
+    cursor.execute("SELECT medicines.medicine_id, med_alternatives.med_alternative FROM medicines INNER JOIN med_alternatives ON medicines.medicine_id = med_alternatives.med_original ORDER BY medicines.medicine_id")
+    orToAl = cursor.fetchall()
+    
+    altNameList = []
+    len = cursor.rowcount
+    for i in range(len): #[i][0] original [i][1] alternative
+        print(orToAl[i][1])
+        cursor.execute("SELECT med_name FROM medicines WHERE medicine_id = {}".format(orToAl[i][1]))
+        altNameList.append(cursor.fetchall()[0][0])
+    print(altNameList)
+    print("-----")
+    print(orToAl)
+    mergedList = [(orToAl[0][0], orToAl[0][1], altNameList[0])]
+    for i in range(1, len):
+        mergedList.append((orToAl[i][0], orToAl[i][1], altNameList[i]))
+    print("-----")
+    print(mergedList)
+    print("-----")
+    
+    return render_template("med_table.html", userRole = role, medList = meds, theme = getTheme(), alternativeList = mergedList)
+
+def sale_table():
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM sales")
+    sales = cursor.fetchall()
+    print(sales)
+    return render_template("sale_table.html", userRole = role, saleList = sales, theme = getTheme())
