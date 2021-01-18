@@ -68,3 +68,4 @@ INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail)
 SELECT med_name, price, stock_quantity, med_detail FROM medicines WHERE med_barcode = '1'
 UPDATE basket_entries SET quantity = 11 WHERE medicine_id = 1
 DELETE FROM basket_entries WHERE basket_id = 1
+UPDATE users SET created_at = CURRENT_TIMESTAMP

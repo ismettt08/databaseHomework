@@ -21,6 +21,8 @@ def create_app():
     app.add_url_rule("/crud_patient", view_func=views.crud_patient, methods=['POST'])
     app.add_url_rule("/med_table", view_func=views.med_table)
     app.add_url_rule("/sale_table", view_func=views.sale_table)
+    app.add_url_rule("/profile", view_func=views.profile)
+    app.add_url_rule("/delete_account", view_func=views.delete_account)
     return app
 
 if __name__ == "__main__":

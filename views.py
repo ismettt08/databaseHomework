@@ -5,7 +5,7 @@
 #Session extra attributes
 #Delete Account
 #User extra attributes
-#Patints extra attributes
+#Patinets extra attributes
 #Reports
 from datetime import datetime
 from hashlib import sha256, md5
@@ -89,7 +89,8 @@ def login_api():
     kurabiye = getRandomCookie()
     resp = make_response(redirect('/'))
     resp.set_cookie('session_id', kurabiye)
-    cursor.execute("INSERT INTO sessions (session_id, user_id) VALUES ('{a}', {b})".format(a=kurabiye, b=userID[0][0]))
+    cursor.execute("INSERT INTO sessions (session_id, user_id, last_used, created_at) VALUES ('{a}', {b}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)".format(a=kurabiye, b=userID[0][0]))
+    cursor.execute("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE user_id = {}".format(userID[0][0]))
     connection.commit() #Database değiştirmek için
     return resp #temp
 
@@ -110,10 +111,27 @@ def register_api():
         return redirect('/employee')
     print("password passwd is " + hashed.hexdigest())
     
-    cursor.execute("INSERT INTO users (user_name, user_role, password) VALUES ('{a}', 0, '{b}')".format(a=name, b=hashed.hexdigest()))
+    cursor.execute("INSERT INTO users (user_name, user_role, password, created_at) VALUES ('{a}', 0, '{b}', CURRENT_TIMESTAMP)".format(a=name, b=hashed.hexdigest()))
     connection.commit() #Database değiştirmek için
     #TODO başarılı oldu yazısı dön
     return redirect('/employee')
+
+def delete_account():
+    cursor = connection.cursor()
+    kurabiye = request.cookies.get("session_id")
+    if kurabiye is not None:
+        cursor.execute("SELECT user_id FROM sessions WHERE session_id = '{}'".format(kurabiye))
+        userID = cursor.fetchall()
+        if userID[0][0] == 0:   #Can not delete root user
+            print("Can not delete root user")
+            return redirect("/")
+        if(cursor.rowcount != 0):
+            #DELETE USER'S EVERY SESSIONS
+            cursor.execute("DELETE FROM sessions WHERE user_id = {}".format(userID[0][0]))
+            #DELETE USER
+            cursor.execute("DELETE FROM users WHERE user_id = {}".format(userID[0][0]))
+            connection.commit()
+    return redirect("/")
 
 def logout_page():
     cursor = connection.cursor()
@@ -281,9 +299,9 @@ def crud_patient():
         if cursor.rowcount == 0: #Add new patient
             cursor.fetchall() #Clear cursor
             if phone:
-                cursor.execute("INSERT INTO patients (patient_name, patient_surname, patient_phone_number, patient_id_number) VALUES ('{a}', '{b}', '{c}', '{d}')".format(a=name, b=surname, c=phone, d=citizenship))
+                cursor.execute("INSERT INTO patients (patient_name, patient_surname, patient_phone_number, patient_id_number, created_at) VALUES ('{a}', '{b}', '{c}', '{d}', CURRENT_TIMESTAMP)".format(a=name, b=surname, c=phone, d=citizenship))
             else:
-                cursor.execute("INSERT INTO patients (patient_name, patient_surname, patient_id_number) VALUES ('{a}', '{b}', '{c}')".format(a=name, b=surname, c=citizenship))
+                cursor.execute("INSERT INTO patients (patient_name, patient_surname, patient_id_number, created_at) VALUES ('{a}', '{b}', '{c}', CURRENT_TIMESTAMP)".format(a=name, b=surname, c=citizenship))
             connection.commit()
         else: #Update the patient
             cursor.fetchall() #Clear cursor
@@ -339,3 +357,15 @@ def sale_table():
     sales = cursor.fetchall()
     print(sales)
     return render_template("sale_table.html", userRole = role, saleList = sales, theme = getTheme())
+
+def profile():
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    cursor = connection.cursor()
+    kurabiye = request.cookies.get("session_id")
+    if kurabiye is not None:
+        cursor.execute("SELECT * FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
+        profileData = cursor.fetchall()
+        
+    return render_template("profile.html", userRole = role,theme = getTheme(), profileData = profileData)
