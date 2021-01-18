@@ -30,6 +30,8 @@ def getUserRole():
     if kurabiye is not None:
         cursor.execute("SELECT user_role FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
         curUserRole = cursor.fetchall()
+        cursor.execute("UPDATE sessions SET last_used = CURRENT_TIMESTAMP WHERE session_id = '{0}'".format((kurabiye)))
+        connection.commit()
         if(cursor.rowcount != 0):
             return int(curUserRole[0][0])
     return -1
@@ -89,7 +91,7 @@ def login_api():
     kurabiye = getRandomCookie()
     resp = make_response(redirect('/'))
     resp.set_cookie('session_id', kurabiye)
-    cursor.execute("INSERT INTO sessions (session_id, user_id, last_used, created_at) VALUES ('{a}', {b}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)".format(a=kurabiye, b=userID[0][0]))
+    cursor.execute("INSERT INTO sessions (session_id, user_id, last_used, created_at, user_agent, ip, theme) VALUES ('{a}', {b}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '{c}', '{d}', 0)".format(a=kurabiye, b=userID[0][0],c=request.user_agent, d=request.remote_addr))
     cursor.execute("UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE user_id = {}".format(userID[0][0]))
     connection.commit() #Database değiştirmek için
     return resp #temp
@@ -287,6 +289,13 @@ def crud_patient():
     if role == -1:
         return redirect("/patient.html")
     cursor = connection.cursor()
+
+    ###TEST AREA ###
+    print(request.user_agent)
+    print(request.remote_addr)
+    ### ###
+
+
 
     citizenship = request.form['citizenship']
 
