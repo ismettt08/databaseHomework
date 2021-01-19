@@ -88,27 +88,27 @@ NEW_INIT_STATEMENTS = [
 	FOREIGN KEY (med_original) REFERENCES medicines (medicine_id) 
 	);""",
     """INSERT INTO users (user_name, user_role, password, created_at) 
-    VALUES ('eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP)""",
+    VALUES ('eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     """INSERT INTO users (user_name, user_role, password, created_at) 
-    VALUES ('deletedUSER', 0, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP)""",
+    VALUES ('deletedUSER', 0, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     """INSERT INTO patients (patient_name, patient_surname, patient_id_number, created_at) 
-    VALUES ('deleted', 'Patient', '0', CURRENT_TIMESTAMP)""",
+    VALUES ('deleted', 'Patient', '0', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Augmentin', 0, 18.80, 500, 'Classic Augmentin')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Croxilex', 1, 15.50, 300, 'Classic Croxilex')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Parol', 2, 5.90, 800, 'Classic Parol')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Aspirin', 3, 8.10, 700, 'Classic Aspirin')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Katarin', 4, 11.15, 200, 'Classic Katarin')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Silverdin', 5, 15.65, 100, 'Classic Silverdin')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Levotiron', 6, 13.00, 100, 'Classic Levotiron')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Minafen', 7, 7.00, 100, 'Classic Minafen')",
-    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Calpol', 8, 9.00, 150, 'Classic Calpol')",
-    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (1, 2)",
-    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (8, 9)",
-    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (2, 1)",
-    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (9, 8)",
-    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (1, 0)",
-    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (2, 1)"
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Augmentin', 0, 18.80, 500, 'Classic Augmentin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Croxilex', 1, 15.50, 300, 'Classic Croxilex') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Parol', 2, 5.90, 800, 'Classic Parol') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Aspirin', 3, 8.10, 700, 'Classic Aspirin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Katarin', 4, 11.15, 200, 'Classic Katarin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Silverdin', 5, 15.65, 100, 'Classic Silverdin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Levotiron', 6, 13.00, 100, 'Classic Levotiron') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Minafen', 7, 7.00, 100, 'Classic Minafen') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (med_name, med_barcode, price, stock_quantity, med_detail) VALUES ('Calpol', 8, 9.00, 150, 'Classic Calpol') ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (1, 2) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (8, 9) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (2, 1) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative, med_original) VALUES (9, 8) ON CONFLICT DO NOTHING",
+    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (1, 0) ON CONFLICT DO NOTHING",
+    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (2, 1) ON CONFLICT DO NOTHING"
 ]
 
 
