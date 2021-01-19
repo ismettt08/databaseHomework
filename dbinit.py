@@ -1,4 +1,4 @@
-#DATABASE_URL="postgres://taha:123456@127.0.0.1:5432/eczanem" python3 dbinit.py 
+# DATABASE_URL="postgres://taha:123456@127.0.0.1:5432/eczanem" python3 dbinit.py
 
 import os
 import sys
@@ -26,7 +26,7 @@ NEW_INIT_STATEMENTS = [
     );""",
     """CREATE TABLE IF NOT EXISTS payment_methods (
 	payment_method_id serial PRIMARY KEY,
-	payment_type INTEGER UNIQUE NOT NULL 
+	payment_type INTEGER UNIQUE NOT NULL
     );""",
     """CREATE TABLE IF NOT EXISTS patients (
 	patient_id serial PRIMARY KEY,
@@ -38,7 +38,7 @@ NEW_INIT_STATEMENTS = [
     );""",
     """CREATE TABLE IF NOT EXISTS baskets (
 	basket_id serial PRIMARY KEY,
-	basket_state BOOLEAN NOT NULL 
+	basket_state BOOLEAN NOT NULL
 	);""",
     """CREATE TABLE IF NOT EXISTS sales (
 	sale_id serial PRIMARY KEY,
@@ -49,15 +49,15 @@ NEW_INIT_STATEMENTS = [
 	user_id INTEGER, FOREIGN KEY (basket_id) REFERENCES baskets (basket_id),
 	FOREIGN KEY (patient_id) REFERENCES patients (patient_id),
 	FOREIGN KEY (payment_method_id) REFERENCES payment_methods (payment_method_id),
-	FOREIGN KEY (user_id) REFERENCES users (user_id) 
+	FOREIGN KEY (user_id) REFERENCES users (user_id)
 	);""",
     """CREATE TABLE IF NOT EXISTS medicines (
-	medicine_id serial PRIMARY KEY, 
-	med_name VARCHAR (50) NOT NULL, 
+	medicine_id serial PRIMARY KEY,
+	med_name VARCHAR (50) NOT NULL,
 	med_barcode VARCHAR (80) NOT NULL,
 	price NUMERIC (10, 2) NOT NULL,
 	stock_quantity INTEGER NOT NULL,
-	med_detail VARCHAR (300) 
+	med_detail VARCHAR (300)
 	);""",
     """CREATE TABLE IF NOT EXISTS basket_entries (
 	basket_entry_id serial PRIMARY KEY,
@@ -65,22 +65,22 @@ NEW_INIT_STATEMENTS = [
 	quantity INTEGER,
 	basket_id INTEGER NOT NULL,
 	FOREIGN KEY (medicine_id) REFERENCES medicines (medicine_id),
-	FOREIGN KEY (basket_id) REFERENCES baskets (basket_id) 
+	FOREIGN KEY (basket_id) REFERENCES baskets (basket_id)
 	);""",
     """CREATE TABLE IF NOT EXISTS med_alternatives (
 	med_alternative_id serial PRIMARY KEY,
 	med_alternative INTEGER NOT NULL,
 	med_original INTEGER NOT NULL,
 	FOREIGN KEY (med_alternative) REFERENCES medicines (medicine_id),
-	FOREIGN KEY (med_original) REFERENCES medicines (medicine_id) 
+	FOREIGN KEY (med_original) REFERENCES medicines (medicine_id)
 	);""",
-    """INSERT INTO users (user_id, user_name, user_role, password, created_at) 
+    """INSERT INTO users (user_id, user_name, user_role, password, created_at)
     VALUES (10000, 'eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
-    """INSERT INTO users (user_id, user_name, user_role, password, created_at) 
+    """INSERT INTO users (user_id, user_name, user_role, password, created_at)
     VALUES (20000, 'deletedUSER', 0, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
-    """INSERT INTO patients (patient_id, patient_name, patient_surname, patient_id_number, created_at) 
+    """INSERT INTO patients (patient_id, patient_name, patient_surname, patient_id_number, created_at)
     VALUES (10000, 'deleted', 'Patient', '0', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
-    
+
     "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (10000, 'Augmentin', 0, 18.80, 500, 'Classic Augmentin') ON CONFLICT DO NOTHING",
     "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (20000, 'Croxilex', 1, 15.50, 300, 'Classic Croxilex') ON CONFLICT DO NOTHING",
     "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (30000, 'Parol', 2, 5.90, 800, 'Classic Parol') ON CONFLICT DO NOTHING",
@@ -103,7 +103,10 @@ def initialize(url):
     with dbapi2.connect(url) as connection:
         cursor = connection.cursor()
         for statement in NEW_INIT_STATEMENTS:
-            cursor.execute(statement)
+            try:
+                cursor.execute(statement)
+            except:
+                pass
         cursor.close()
 
 

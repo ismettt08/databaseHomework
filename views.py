@@ -1,4 +1,5 @@
 #DATABASE_URL=postgres://postgres:123456@taha:5432/eczanem python3 server.py 
+#KANALIMA HOSGELDINIZ
 
 from datetime import datetime
 from hashlib import sha256, md5
@@ -117,12 +118,12 @@ def delete_account():
     if kurabiye is not None:
         cursor.execute("SELECT user_id FROM sessions WHERE session_id = '{}'".format(kurabiye))
         userID = cursor.fetchall()
-        if userID[0][0] == 0 or userID[0][0] == 1:   #Can not delete root user or deletedUser
+        if userID[0][0] == 10000 or userID[0][0] == 20000:   #Can not delete root user or deletedUser
             print("Can not delete root user")
             return redirect("/")
         if(cursor.rowcount != 0):
-            #MOVE USER'S EVERY CONNECTION TO THE deletedUSER(user_id = 2)
-            cursor.execute("UPDATE sales SET user_id = 2 WHERE user_id = {}".format(userID[0][0]))
+            #MOVE USER'S EVERY CONNECTION TO THE deletedUSER(user_id = 20000)
+            cursor.execute("UPDATE sales SET user_id = 20000 WHERE user_id = {}".format(userID[0][0]))
             #DELETE USER'S EVERY SESSIONS
             cursor.execute("DELETE FROM sessions WHERE user_id = {}".format(userID[0][0]))
             #DELETE USER
@@ -279,9 +280,9 @@ def update_medicine():
     amount =  request.args.get("amount")
     cursor = connection.cursor()
     if amount == "0":
-        cursor.execute(f"delete from basket_entries where basket_entry_id = {basket_entry_id}")
+        cursor.execute(f"DELETE FROM basket_entries WHERE basket_entry_id = {basket_entry_id}")
     else: #TODO negatif şanslara girmesine izin verme
-        cursor.execute(f"update basket_entries set quantity = quantity + {amount} where basket_entry_id = {basket_entry_id}")
+        cursor.execute(f"UPDATE basket_entries SET quantity = quantity + {amount} WHERE basket_entry_id = {basket_entry_id}")
     connection.commit()
     return redirect("/sell")
 
@@ -345,9 +346,9 @@ def crud_patient():
 
     elif request.form["submit"] == "remove":
         patientID = cursor.fetchall()
-        if cursor.rowcount != 0 and patientID[0][0] != 1: #Remove patient, can not remove deleted Patient
-            #MOVE PATIENT'S EVERY CONNECTION TO deleted Patient(patient_id = 1)
-            cursor.execute("UPDATE sales SET patient_id = 1 WHERE patient_id = {}".format(patientID[0][0]))
+        if cursor.rowcount != 0 and patientID[0][0] != 10000: #Remove patient, can not remove deleted Patient
+            #MOVE PATIENT'S EVERY CONNECTION TO deleted Patient(patient_id = 10000)
+            cursor.execute("UPDATE sales SET patient_id = 10000 WHERE patient_id = {}".format(patientID[0][0]))
             cursor.execute("DELETE FROM patients WHERE patient_id_number = '{}'".format(citizenship))
             connection.commit()
     return redirect("/patient")
