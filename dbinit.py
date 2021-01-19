@@ -7,73 +7,73 @@ import psycopg2 as dbapi2
 
 NEW_INIT_STATEMENTS = [
     """CREATE TABLE IF NOT EXISTS users (
-	user_id serial PRIMARY KEY,
-	user_name VARCHAR (50) UNIQUE NOT NULL,
-	password VARCHAR (255) NOT NULL,
-	user_role INTEGER NOT NULL,
-	created_at TIMESTAMP WITH TIME ZONE,
-	last_login TIMESTAMP WITH TIME ZONE
+    user_id serial PRIMARY KEY,
+    user_name VARCHAR (50) UNIQUE NOT NULL,
+    password VARCHAR (255) NOT NULL,
+    user_role INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE,
+    last_login TIMESTAMP WITH TIME ZONE
     );""",
     """CREATE TABLE IF NOT EXISTS sessions (
-	user_id INTEGER NOT NULL,
-	session_id VARCHAR (60) PRIMARY KEY,
-	last_used TIMESTAMP WITH TIME ZONE,
-	created_at TIMESTAMP WITH TIME ZONE,
-	user_agent VARCHAR (100),
-	ip VARCHAR (15),
-	theme INTEGER,
-	FOREIGN KEY (user_id) REFERENCES users (user_id)
+    user_id INTEGER NOT NULL,
+    session_id VARCHAR (60) PRIMARY KEY,
+    last_used TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE,
+    user_agent VARCHAR (100),
+    ip VARCHAR (15),
+    theme INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
     );""",
     """CREATE TABLE IF NOT EXISTS payment_methods (
-	payment_method_id serial PRIMARY KEY,
-	payment_type INTEGER UNIQUE NOT NULL
+    payment_method_id serial PRIMARY KEY,
+    payment_type INTEGER UNIQUE NOT NULL
     );""",
     """CREATE TABLE IF NOT EXISTS patients (
-	patient_id serial PRIMARY KEY,
-	patient_name VARCHAR (50) NOT NULL,
-	patient_surname VARCHAR (50) NOT NULL,
-	patient_phone_number VARCHAR (15),
-	patient_id_number VARCHAR (11),
-	created_at TIMESTAMP WITH TIME ZONE
+    patient_id serial PRIMARY KEY,
+    patient_name VARCHAR (50) NOT NULL,
+    patient_surname VARCHAR (50) NOT NULL,
+    patient_phone_number VARCHAR (15),
+    patient_id_number VARCHAR (11),
+    created_at TIMESTAMP WITH TIME ZONE
     );""",
     """CREATE TABLE IF NOT EXISTS baskets (
-	basket_id serial PRIMARY KEY,
-	basket_state BOOLEAN NOT NULL
-	);""",
+    basket_id serial PRIMARY KEY,
+    basket_state BOOLEAN NOT NULL
+    );""",
     """CREATE TABLE IF NOT EXISTS sales (
-	sale_id serial PRIMARY KEY,
-	basket_id INTEGER NOT NULL,
-	patient_id INTEGER,
-	payment_method_id INTEGER,
-	price NUMERIC (10, 2) NOT NULL,
-	user_id INTEGER, FOREIGN KEY (basket_id) REFERENCES baskets (basket_id),
-	FOREIGN KEY (patient_id) REFERENCES patients (patient_id),
-	FOREIGN KEY (payment_method_id) REFERENCES payment_methods (payment_method_id),
-	FOREIGN KEY (user_id) REFERENCES users (user_id)
-	);""",
+    sale_id serial PRIMARY KEY,
+    basket_id INTEGER NOT NULL,
+    patient_id INTEGER,
+    payment_method_id INTEGER,
+    price NUMERIC (10, 2) NOT NULL,
+    user_id INTEGER, FOREIGN KEY (basket_id) REFERENCES baskets (basket_id),
+    FOREIGN KEY (patient_id) REFERENCES patients (patient_id),
+    FOREIGN KEY (payment_method_id) REFERENCES payment_methods (payment_method_id),
+    FOREIGN KEY (user_id) REFERENCES users (user_id)
+    );""",
     """CREATE TABLE IF NOT EXISTS medicines (
-	medicine_id serial PRIMARY KEY,
-	med_name VARCHAR (50) NOT NULL,
-	med_barcode VARCHAR (80) NOT NULL,
-	price NUMERIC (10, 2) NOT NULL,
-	stock_quantity INTEGER NOT NULL,
-	med_detail VARCHAR (300)
-	);""",
+    medicine_id serial PRIMARY KEY,
+    med_name VARCHAR (50) NOT NULL,
+    med_barcode VARCHAR (80) NOT NULL,
+    price NUMERIC (10, 2) NOT NULL,
+    stock_quantity INTEGER NOT NULL,
+    med_detail VARCHAR (300)
+    );""",
     """CREATE TABLE IF NOT EXISTS basket_entries (
-	basket_entry_id serial PRIMARY KEY,
-	medicine_id INTEGER NOT NULL,
-	quantity INTEGER,
-	basket_id INTEGER NOT NULL,
-	FOREIGN KEY (medicine_id) REFERENCES medicines (medicine_id),
-	FOREIGN KEY (basket_id) REFERENCES baskets (basket_id)
-	);""",
+    basket_entry_id serial PRIMARY KEY,
+    medicine_id INTEGER NOT NULL,
+    quantity INTEGER,
+    basket_id INTEGER NOT NULL,
+    FOREIGN KEY (medicine_id) REFERENCES medicines (medicine_id),
+    FOREIGN KEY (basket_id) REFERENCES baskets (basket_id)
+    );""",
     """CREATE TABLE IF NOT EXISTS med_alternatives (
-	med_alternative_id serial PRIMARY KEY,
-	med_alternative INTEGER NOT NULL,
-	med_original INTEGER NOT NULL,
-	FOREIGN KEY (med_alternative) REFERENCES medicines (medicine_id),
-	FOREIGN KEY (med_original) REFERENCES medicines (medicine_id)
-	);""",
+    med_alternative_id serial PRIMARY KEY,
+    med_alternative INTEGER NOT NULL,
+    med_original INTEGER NOT NULL,
+    FOREIGN KEY (med_alternative) REFERENCES medicines (medicine_id),
+    FOREIGN KEY (med_original) REFERENCES medicines (medicine_id)
+    );""",
     """INSERT INTO users (user_id, user_name, user_role, password, created_at)
     VALUES (10000, 'eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     """INSERT INTO users (user_id, user_name, user_role, password, created_at)
@@ -107,7 +107,7 @@ def initialize(url):
                 cursor.execute(statement)
             except:
                 pass
-			connection.commit()
+            connection.commit()
         cursor.close()
 
 
