@@ -1,13 +1,11 @@
 #DATABASE_URL="postgres://taha:123456@127.0.0.1:5432/eczanem" python3 server.py
-
 from flask import Flask
 import views
 
-def create_app():
-    app = Flask(__name__)
 
-    #app.config["DEBUG"] = True
+app = Flask(__name__)
 
+if __name__ == "__main__":
     app.add_url_rule("/", view_func=views.home_page)
     app.add_url_rule("/login_api", view_func=views.login_api, methods=['POST'])
     app.add_url_rule("/logout_page", view_func=views.logout_page)
@@ -26,8 +24,4 @@ def create_app():
     app.add_url_rule("/profile", view_func=views.profile)
     app.add_url_rule("/delete_account", view_func=views.delete_account)
     app.add_url_rule("/reports", view_func=views.reports)
-    return app
-
-if __name__ == "__main__":
-    app = create_app()
     app.run()
