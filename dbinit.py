@@ -75,27 +75,27 @@ NEW_INIT_STATEMENTS = [
 	FOREIGN KEY (med_original) REFERENCES medicines (medicine_id) 
 	);""",
     """INSERT INTO users (user_id, user_name, user_role, password, created_at) 
-    VALUES (1, 'eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
+    VALUES (10000, 'eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     """INSERT INTO users (user_id, user_name, user_role, password, created_at) 
-    VALUES (2, 'deletedUSER', 0, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
+    VALUES (20000, 'deletedUSER', 0, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     """INSERT INTO patients (patient_id, patient_name, patient_surname, patient_id_number, created_at) 
-    VALUES (1, 'deleted', 'Patient', '0', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
+    VALUES (10000, 'deleted', 'Patient', '0', CURRENT_TIMESTAMP) ON CONFLICT DO NOTHING""",
     
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (1, 'Augmentin', 0, 18.80, 500, 'Classic Augmentin') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (2, 'Croxilex', 1, 15.50, 300, 'Classic Croxilex') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (3, 'Parol', 2, 5.90, 800, 'Classic Parol') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (4, 'Aspirin', 3, 8.10, 700, 'Classic Aspirin') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (5, 'Katarin', 4, 11.15, 200, 'Classic Katarin') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (6, 'Silverdin', 5, 15.65, 100, 'Classic Silverdin') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (7, 'Levotiron', 6, 13.00, 100, 'Classic Levotiron') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (8, 'Minafen', 7, 7.00, 100, 'Classic Minafen') ON CONFLICT DO NOTHING",
-    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (9, 'Calpol', 8, 9.00, 150, 'Classic Calpol') ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (1, 1, 2) ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (2, 8, 9) ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (3, 2, 1) ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (4, 9, 8) ON CONFLICT DO NOTHING",
-    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (1, 0) ON CONFLICT DO NOTHING",
-    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (2, 1) ON CONFLICT DO NOTHING"
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (10000, 'Augmentin', 0, 18.80, 500, 'Classic Augmentin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (20000, 'Croxilex', 1, 15.50, 300, 'Classic Croxilex') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (30000, 'Parol', 2, 5.90, 800, 'Classic Parol') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (40000, 'Aspirin', 3, 8.10, 700, 'Classic Aspirin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (50000, 'Katarin', 4, 11.15, 200, 'Classic Katarin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (60000, 'Silverdin', 5, 15.65, 100, 'Classic Silverdin') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (70000, 'Levotiron', 6, 13.00, 100, 'Classic Levotiron') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (80000, 'Minafen', 7, 7.00, 100, 'Classic Minafen') ON CONFLICT DO NOTHING",
+    "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (90000, 'Calpol', 8, 9.00, 150, 'Classic Calpol') ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (10000, 1, 2) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (20000, 8, 9) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (30000, 2, 1) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (40000, 9, 8) ON CONFLICT DO NOTHING",
+    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (1000, 0) ON CONFLICT DO NOTHING",
+    "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (2000, 1) ON CONFLICT DO NOTHING"
 ]
 
 
