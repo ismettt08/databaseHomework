@@ -90,10 +90,10 @@ NEW_INIT_STATEMENTS = [
     "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (70000, 'Levotiron', 6, 13.00, 100, 'Classic Levotiron') ON CONFLICT DO NOTHING",
     "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (80000, 'Minafen', 7, 7.00, 100, 'Classic Minafen') ON CONFLICT DO NOTHING",
     "INSERT INTO medicines (medicine_id, med_name, med_barcode, price, stock_quantity, med_detail) VALUES (90000, 'Calpol', 8, 9.00, 150, 'Classic Calpol') ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (10000, 1, 2) ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (20000, 8, 9) ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (30000, 2, 1) ON CONFLICT DO NOTHING",
-    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (40000, 9, 8) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (10000, 10000, 20000) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (20000, 80000, 90000) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (30000, 20000, 10000) ON CONFLICT DO NOTHING",
+    "INSERT INTO med_alternatives (med_alternative_id, med_alternative, med_original) VALUES (40000, 90000, 80000) ON CONFLICT DO NOTHING",
     "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (1000, 0) ON CONFLICT DO NOTHING",
     "INSERT INTO payment_methods (payment_method_id, payment_type) VALUES (2000, 1) ON CONFLICT DO NOTHING"
 ]
