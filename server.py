@@ -1,4 +1,5 @@
 #DATABASE_URL="postgres://taha:123456@127.0.0.1:5432/eczanem" python3 server.py
+from src.init import app
 
 from flask import Flask
 import views
@@ -30,4 +31,4 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="0.0.0.0", port=8080)
+    app.run()
