@@ -124,10 +124,12 @@ def delete_account():
     if kurabiye is not None:
         cursor.execute("SELECT user_id FROM sessions WHERE session_id = '{}'".format(kurabiye))
         userID = cursor.fetchall()
-        if userID[0][0] == 0:   #Can not delete root user
+        if userID[0][0] == 0 or userID[0][0] == 1:   #Can not delete root user or deletedUser
             print("Can not delete root user")
             return redirect("/")
         if(cursor.rowcount != 0):
+            #MOVE USER'S EVERY CONNECTION TO THE deletedUSER(user_id = 2)
+            cursor.execute("UPDATE sales SET user_id = 2 WHERE user_id = {}".format(userID[0][0]))
             #DELETE USER'S EVERY SESSIONS
             cursor.execute("DELETE FROM sessions WHERE user_id = {}".format(userID[0][0]))
             #DELETE USER
@@ -274,7 +276,7 @@ def patient_table():
     if role == -1:
         return redirect("/")
     cursor = connection.cursor()
-    cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number FROM patients ORDER BY patient_id")
+    cursor.execute("SELECT patient_name, patient_surname, patient_phone_number, patient_id_number, patient_id FROM patients ORDER BY patient_id")
     patients = cursor.fetchall()
     return render_template("patient_table.html", userRole = role, patientList = patients, theme = getTheme())
 
@@ -329,7 +331,7 @@ def crud_patient():
     ### ###
 
     citizenship = request.form['citizenship']
-    cursor.execute("SELECT * FROM patients WHERE patient_id_number = '{}'".format(citizenship))
+    cursor.execute("SELECT patient_id FROM patients WHERE patient_id_number = '{}'".format(citizenship))
     if request.form["submit"] == "update":
         print("DEBUG2")
         name = request.form['name']
@@ -351,8 +353,10 @@ def crud_patient():
             connection.commit()
 
     elif request.form["submit"] == "remove":
-        print("DEBUG")
-        if cursor.rowcount != 0: #Remove patient
+        patientID = cursor.fetchall()
+        if cursor.rowcount != 0 and patientID[0][0] != 1: #Remove patient, can not remove deleted Patient
+            #MOVE PATIENT'S EVERY CONNECTION TO deleted Patient(patient_id = 1)
+            cursor.execute("UPDATE sales SET patient_id = 1 WHERE patient_id = {}".format(patientID[0][0]))
             cursor.execute("DELETE FROM patients WHERE patient_id_number = '{}'".format(citizenship))
             connection.commit()
     return redirect("/patient")
@@ -363,7 +367,7 @@ def med_table():
     if role == -1:
         return redirect("/")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM medicines")
+    cursor.execute("SELECT medicine_id, med_name, med_barcode, price, stock_quantity, med_detail FROM medicines ORDER BY medicine_id")
     meds = cursor.fetchall()
 
     cursor.execute("SELECT medicines.medicine_id, med_alternatives.med_alternative FROM medicines INNER JOIN med_alternatives ON medicines.medicine_id = med_alternatives.med_original ORDER BY medicines.medicine_id")
@@ -392,7 +396,7 @@ def sale_table():
     if role == -1:
         return redirect("/")
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM sales")
+    cursor.execute("SELECT sale_id, basket_id, patient_id, payment_method_id, price, user_id FROM sales ORDER BY sale_id")
     sales = cursor.fetchall()
     print(sales)
     return render_template("sale_table.html", userRole = role, saleList = sales, theme = getTheme())
@@ -442,3 +446,4 @@ def reports():
 
 ##PATLAYANLAR VE DÜZELTİLECEKLER
 #Foreign key violation CREATE deletedPatient and deletedUser
+# * ile alınan sql'lerin sırasına bak

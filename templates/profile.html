@@ -24,11 +24,13 @@
                 </tr>
             </tbody>
         </table>
+        {% if userRole != 1 %}
         <div class="col s10 offset-s2 input-field">
             <form action="{{url_for('delete_account')}}" id="profile_unq">
                 <button class="waves-effect waves-light btn right red lighten-2" type="submit"><i class="material-icons left">delete</i>Delete Account</button>
             </form>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

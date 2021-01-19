@@ -31,7 +31,7 @@
 
     <div class="col s8 offset-s2 light-blue lighten-5">
         <table class="highlight centered">
-            <h5 class="center grey-text">Sale statistics by payment methods</h4>
+            <h5 class="center grey-text">Sale statistics by payment method</h4>
             <thead>
                 <tr>
                     <th>Method</th>
@@ -40,6 +40,7 @@
                 </tr>
             </thead>
             <tbody>
+                {% if byMethod %}
                 <tr>
                     <td>Cash</td>
                     <td>{{byMethod[1][1]}}</td>
@@ -49,14 +50,15 @@
                     <td>Credit</td>
                     <td>{{byMethod[0][1]}}</td>
                     <td>{{byMethod[0][2]}}</td>
-                </tr>  
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
 
     <div class="col s8 offset-s2 light-blue lighten-5">
         <table class="highlight centered">
-            <h5 class="center grey-text">Sale statistics by patients</h4>
+            <h5 class="center grey-text">Sale statistics by patient</h4>
             <thead>
                 <tr>
                     <th>Full Name</th>

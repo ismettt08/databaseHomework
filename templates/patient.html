@@ -20,7 +20,7 @@
         
         <div class="input-field col s5 offset-s3">
             <i class="material-icons prefix ">contact_phone</i>
-            <input type="text" name="phone" value="{{patient[0][2]}}">
+            <input type="text" name="phone" value="{{patient[0][2]}}" data-length="14">
             <label for="phone">Phone Number</label>
         </div>
 
@@ -45,7 +45,7 @@
         
         <div class="input-field col s5 offset-s3">
             <i class="material-icons prefix ">contact_phone</i>
-            <input type="text" name="phone">
+            <input type="text" name="phone"  data-length="14">
             <label for="phone">Phone Number</label>
         </div>
 
@@ -57,8 +57,7 @@
         {% endif %}
         <div class="container col s5 offset-s3">
             <button class="waves-effect waves-light btn green lighten-2 centered" type="submit" name="submit"  value="update"><i class="material-icons left">add</i>Add/Update</button>
-            <button class="waves-effect waves-light btn red lighten-2 centered" type="submit" name="submit"  value="remove"><i class="material-icons left">remove</i>Remove</button>
-        </div>
+         </div>
     </form>
 
     <form action="{{url_for('crud_patient')}}"  method="POST" class="input-field col s5 offset-s3" id="rmpat_unq">
