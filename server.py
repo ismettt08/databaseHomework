@@ -3,8 +3,6 @@
 from flask import Flask
 import views
 
-app = Flask(__name__, static_folder="./static")
-
 def create_app():
     app = Flask(__name__)
 
