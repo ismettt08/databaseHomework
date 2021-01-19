@@ -3,10 +3,12 @@
 from flask import Flask
 import views
 
+app = Flask(__name__, static_folder="./static")
+
 def create_app():
     app = Flask(__name__)
 
-    app.config["DEBUG"] = True
+    #app.config["DEBUG"] = True
 
     app.add_url_rule("/", view_func=views.home_page)
     app.add_url_rule("/login_api", view_func=views.login_api, methods=['POST'])
