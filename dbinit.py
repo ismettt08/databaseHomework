@@ -107,6 +107,7 @@ def initialize(url):
                 cursor.execute(statement)
             except:
                 pass
+			connection.commit()
         cursor.close()
 
 
