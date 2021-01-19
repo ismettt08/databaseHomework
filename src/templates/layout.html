@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+
+    <title>Eczanem -> {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}"/>
+  </head>
+  {% if theme == 1 %}
+    <body  style="background-color:#757575 ">
+  {% elif theme == 2 %}
+    <body  style="background-color:#90caf9">
+  {% else %}
+    <body  style="background-color:#f5f5f5">
+  {% endif %}
+
+{% if userRole == 1 %}
+<nav>
+  <div class="nav-wrapper blue lighten-3 ">
+    <div class="container">
+      <ul id="nav-mobile" class="left">
+        <li><a href="{{url_for('sell_page')}}">Sell</a></li>
+        <li><a href="{{url_for('reports')}}">Reports</a></li>
+        <li><a href="{{url_for('med_table')}}">Medicines</a></li>
+        <li><a href="{{url_for('sale_table')}}">Sales</a></li>
+      </ul>
+
+      <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Root)</a>
+      
+      <ul id="nav-mobile" class="right">
+        <li><a href="{{url_for('patient_table')}}">Patients</a></li>
+        <li><a href="{{url_for('employee_page')}}">Employee</a></li>
+        <li><a href="{{url_for('profile')}}">Profile</a></li>
+        <li><a href="{{url_for('logout_page')}}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% elif userRole == 0 %}
+<nav>
+      <div class="nav-wrapper blue lighten-3 ">
+        <div class="container">
+          <ul id="nav-mobile" class="left">
+            <li><a href="{{url_for('sell_page')}}">Sell</a></li>
+            <li><a href="{{url_for('med_table')}}">Medicines</a></li>
+            <li><a href="{{url_for('sale_table')}}">Sales</a></li>
+          </ul>
+
+          <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Employee)</a>
+          
+          <ul id="nav-mobile" class="right">
+            <li><a href="{{url_for('patient_table')}}">Patients</a></li>
+            <li><a href="{{url_for('profile')}}">Profile</a></li>
+            <li><a href="{{url_for('logout_page')}}">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+{% else %}
+<nav>
+  <div class="nav-wrapper blue lighten-3 ">
+    <div class="container">
+      <a href="{{url_for('home_page')}}" class="brand-logo center">Eczanem(Random guy)</a>
+    </div>
+  </div>
+</nav>
+{% endif %}
+<div style="height: 50px;"></div>
+
+{% block content %}{% endblock %}
+<div style="height: 700px;"></div>
+<footer>
+  <small>&copy; İsmet Taha ARSLAN - 150180718 @2021</small>
+</footer>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>$(document).ready(function(){$('.tooltipped').tooltip();});</script>
+</body>
+</html>
