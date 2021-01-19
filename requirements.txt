@@ -1,4 +1,6 @@
-Flask
+flask
+mock
+gevent
 psycopg2-binary
 gunicorn
 jedi
