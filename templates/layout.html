@@ -12,7 +12,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 
-    <title>Ödev Sayfa -> {% block title %}{% endblock %}</title>
+    <title>Eczanem -> {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}"/>
   </head>
   {% if theme == 1 %}
@@ -22,7 +22,6 @@
   {% else %}
     <body  style="background-color:#f5f5f5">
   {% endif %}
-  
 
 {% if userRole == 1 %}
 <nav>
@@ -77,35 +76,13 @@
 {% endif %}
 <div style="height: 50px;"></div>
 
-
-
-
-
-
-    {% block content %}{% endblock %}
-    <div style="height: 700px;"></div>
-    <footer>
-      <small>&copy; İsmet Taha ARSLAN - 150180718 @2021</small>
-    </footer>
-
-    <!--JavaScript at end of body for optimized loading
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
-
-   
-    <!-- Compiled and minified CSS 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
-
-    <!-- Compiled and minified JavaScript 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
-            
-    <!-- Compiled and minified CSS -->
-
+{% block content %}{% endblock %}
+<div style="height: 700px;"></div>
+<footer>
+  <small>&copy; İsmet Taha ARSLAN - 150180718 @2021</small>
+</footer>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>$(document).ready(function(){$('.tooltipped').tooltip();});</script>
-
-
-   <!--<script>document.addEventListener('DOMContentLoaded', function() {var elems = document.querySelectorAll('.sidenav'); var instances = M.Sidenav.init(elems, options);});</script>-->   
-  </body>
+</body>
 </html>

@@ -31,19 +31,3 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     app.run(host="0.0.0.0", port=8080)
-
-    """
-    TODO LIST
-    ->Add sell_page
-        Hold medicine_basket array and use ninja(for) to write out
-        Every redirect write out again
-        Increasing/decreasing deleting/adding means reload
-        Payment method is clickbox
-
-        Add select customer section with autocomplete
-        !Install every customer name to use in autocomplete
-
-
-    ->Add report_page
-        GROUP BY kullan
-    """

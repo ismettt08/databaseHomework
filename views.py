@@ -1,12 +1,5 @@
 #DATABASE_URL=postgres://postgres:123456@taha:5432/eczanem python3 server.py 
 
-#Medicine List
-#Sales List
-#Session extra attributes
-#Delete Account
-#User extra attributes
-#Patinets extra attributes
-#Reports
 from datetime import datetime
 from hashlib import sha256, md5
 import random
@@ -313,8 +306,6 @@ def med():
     role = getUserRole()
     if role == -1:
         return redirect("/")
-    cursor = connection.cursor()
-
     return render_template("med.html", userRole = role, theme = getTheme())
 
 #methods = ['POST','GET']
@@ -408,7 +399,7 @@ def profile():
     cursor = connection.cursor()
     kurabiye = request.cookies.get("session_id")
     if kurabiye is not None:
-        cursor.execute("SELECT * FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
+        cursor.execute("SELECT users.user_id, user_name, user_role, users.created_at, last_login FROM users INNER JOIN sessions ON sessions.user_id = users.user_id WHERE sessions.session_id = '{0}'".format((kurabiye)))
         profileData = cursor.fetchall()
         
     return render_template("profile.html", userRole = role,theme = getTheme(), profileData = profileData)
@@ -433,17 +424,3 @@ def reports():
 #Sales made by employee
 #Medicine Sales (for better orderlist)
 ###
-
-###Missing###
-#Add item to storage (add, cancel)
-#Daily, monthly yearly sales report
-#Search med for name /category / id
-###
-
-
-##PATLAYACAKLAR
-##Nakit ya da kredi yoksa reports-2 patlar
-
-##PATLAYANLAR VE DÜZELTİLECEKLER
-#Foreign key violation CREATE deletedPatient and deletedUser
-# * ile alınan sql'lerin sırasına bak

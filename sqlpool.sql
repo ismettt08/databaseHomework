@@ -69,3 +69,24 @@ SELECT med_name, price, stock_quantity, med_detail FROM medicines WHERE med_barc
 UPDATE basket_entries SET quantity = 11 WHERE medicine_id = 1
 DELETE FROM basket_entries WHERE basket_id = 1
 UPDATE users SET created_at = CURRENT_TIMESTAMP
+
+//total price by user_id
+SELECT user_id, SUM(price) FROM sales GROUP BY user_id
+SELECT user_id, SUM(price) FROM sales WHERE user_id = 0 GROUP BY user_id 
+SELECT user_id || '. ' || user_name || ' [' || user_role || ']' myUser, SUM(price) FROM sales INNER JOIN users USING (user_id) GROUP BY myUser
+
+//total sale count by use_id
+SELECT user_id || '. ' || user_name || ' [' || user_role || ']' myUser, COUNT(sale_id) FROM sales INNER JOIN users USING (user_id) GROUP BY myUser
+//All together by user
+SELECT user_id || '. ' || user_name || ' [' || user_role || ']' myUser, SUM(price), COUNT(sale_id) FROM sales INNER JOIN users USING (user_id) GROUP BY myUser
+
+//total price by payment_method (1 or 2)
+SELECT payment_method_id, SUM(price) FROM sales WHERE payment_method_id = 2 GROUP BY payment_method_id
+//with count
+SELECT payment_method_id, SUM(price), COUNT(sale_id) FROM sales WHERE payment_method_id = 2 GROUP BY payment_method_id
+
+//total price by patient_names
+SELECT patient_name || ' ' || patient_surname full_name, SUM(price) total FROM sales INNER JOIN patients USING (patient_id) GROUP BY full_name ORDER BY total
+//Total price and sale amount
+SELECT patient_name || ' ' || patient_surname full_name, SUM(price), COUNT(sale_id) total FROM sales INNER JOIN patients USING (patient_id) GROUP BY full_name ORDER BY total
+
