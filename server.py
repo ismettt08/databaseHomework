@@ -23,6 +23,7 @@ def create_app():
     app.add_url_rule("/sale_table", view_func=views.sale_table)
     app.add_url_rule("/profile", view_func=views.profile)
     app.add_url_rule("/delete_account", view_func=views.delete_account)
+    app.add_url_rule("/reports", view_func=views.reports)
     return app
 
 if __name__ == "__main__":

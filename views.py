@@ -378,3 +378,34 @@ def profile():
         profileData = cursor.fetchall()
         
     return render_template("profile.html", userRole = role,theme = getTheme(), profileData = profileData)
+
+def reports():
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    cursor = connection.cursor()
+    cursor.execute("SELECT user_id || '. ' || user_name || ' [' || user_role || ']' myUser, SUM(price), COUNT(sale_id) FROM sales INNER JOIN users USING (user_id) GROUP BY myUser")
+    byUser = cursor.fetchall()
+
+    cursor.execute("SELECT payment_method_id, SUM(price), COUNT(sale_id) FROM sales GROUP BY payment_method_id")
+    byMethod = cursor.fetchall()
+
+    cursor.execute("SELECT patient_name || ' ' || patient_surname full_name, SUM(price), COUNT(sale_id) total FROM sales INNER JOIN patients USING (patient_id) GROUP BY full_name ORDER BY total")
+    byPatient = cursor.fetchall()
+    return render_template("reports.html", userRole = role, theme = getTheme(), byUser = byUser, byMethod = byMethod, byPatient = byPatient)
+
+###REPORTS###
+#Total Sales (How much is credit)
+#Sales made by employee
+#Medicine Sales (for better orderlist)
+###
+
+###Missing###
+#Add item to storage (add, cancel)
+#Daily, monthly yearly sales report
+#Search med for name /category / id
+###
+
+
+##PATLAYACAKLAR
+##Nakit ya da kredi yoksa reports-2 patlar
