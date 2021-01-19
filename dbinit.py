@@ -34,3 +34,12 @@ if __name__ == "__main__":
         print("Usage: DATABASE_URL=url python dbinit.py", file=sys.stderr)
         sys.exit(1)
     initialize(url)
+
+"""
+eczaci (123) user
+    INSERT INTO users (user_name, user_role, password, created_at) VALUES ('eczaci', 1, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP)
+deletedUSER (123) user
+    INSERT INTO users (user_name, user_role, password, created_at) VALUES ('deletedUSER', 0, 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', CURRENT_TIMESTAMP)
+deletedPatient
+    INSERT INTO patients (patient_name, patient_surname, patient_id_number, created_at) VALUES ('deleted', 'Patient', '0', CURRENT_TIMESTAMP)
+"""

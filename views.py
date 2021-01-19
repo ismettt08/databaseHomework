@@ -170,6 +170,25 @@ def sell_page():
     return render_template("sell.html", userRole = curUserRole, medList = medAttributes, citizenshipJSON = patientsCitizenship, theme = getTheme(), totalPrice = totalPrice)
 
 #methods = ['POST']
+def addstock_api():
+    cursor = connection.cursor()
+    if request.form["submit"]:
+        barcode = request.form["thebarcode"]
+        amount = request.form["theamount"]
+    
+        cursor.execute("SELECT medicine_id FROM medicines WHERE med_barcode = '{}'".format(barcode))
+        cursor.fetchall()
+        if(cursor.rowcount == 0): #If there is no citizen with that id
+            return redirect("/med")
+
+        if barcode and amount:
+            cursor.execute("UPDATE medicines SET stock_quantity = stock_quantity + {a} WHERE med_barcode = '{b}'".format(a=int(amount), b=int(barcode[0][0])))
+            connection.commit()
+        else: #If at least one of them is empty
+            return redirect("/med")
+    return redirect("/med")
+
+#methods = ['POST']
 def addmed_api():
     cursor = connection.cursor()
     basketID = getBasketID()
@@ -196,6 +215,11 @@ def addmed_api():
             isCredit = 1
         citizenshipNumber = request.form["thecustomer"]
         if citizenshipNumber == "": #If citizenship number is empty return
+            return redirect("/sell")
+
+        cursor.execute("SELECT patient_id FROM patients WHERE patient_id_number = '{}'".format(citizenshipNumber))
+        cursor.fetchall()
+        if(cursor.rowcount == 0): #If there is no patient with that citizenship_id
             return redirect("/sell")
 
         cursor.execute("SELECT medicine_id FROM basket_entries WHERE basket_id = {}".format(basketID))
@@ -283,6 +307,15 @@ def patient():
     return render_template("patient.html", userRole = role, citizenshipNumber = citizenshipNumber, patient = curPatient, theme = getTheme()) #Full patient card
 
 #methods = ['POST','GET']
+def med():
+    role = getUserRole()
+    if role == -1:
+        return redirect("/")
+    cursor = connection.cursor()
+
+    return render_template("med.html", userRole = role, theme = getTheme())
+
+#methods = ['POST','GET']
 def crud_patient():
     
     role = getUserRole()
@@ -295,10 +328,7 @@ def crud_patient():
     print(request.remote_addr)
     ### ###
 
-
-
     citizenship = request.form['citizenship']
-
     cursor.execute("SELECT * FROM patients WHERE patient_id_number = '{}'".format(citizenship))
     if request.form["submit"] == "update":
         print("DEBUG2")
@@ -409,3 +439,6 @@ def reports():
 
 ##PATLAYACAKLAR
 ##Nakit ya da kredi yoksa reports-2 patlar
+
+##PATLAYANLAR VE DÜZELTİLECEKLER
+#Foreign key violation CREATE deletedPatient and deletedUser

@@ -3,6 +3,11 @@
 {% block content %}
 
 <div class="row">
+    <div class="col s8 offset-s2 input-field">
+        <form action="{{url_for('med')}}" id="addpat_unq">
+            <button class="waves-effect waves-light btn green lighten-2" type="submit"><i class="material-icons left">add</i>Add</button>
+        </form>
+    </div>
     <div class="col s8 offset-s2 light-blue lighten-5">
         <table class="highlight centered">
             <h4 class="center">Medicines</h4>
