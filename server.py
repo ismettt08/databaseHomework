@@ -1,5 +1,4 @@
 #DATABASE_URL="postgres://taha:123456@127.0.0.1:5432/eczanem" python3 server.py
-from src.init import app
 
 from flask import Flask
 import views
